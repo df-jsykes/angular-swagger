@@ -6,7 +6,7 @@ angular.module('ngSwagger', [])
     .factory('Swagger', ['$rootScope', '$http', 'BASE_PATH', 'APP_NAME', function ($rootScope, $http, basepath, appname) {
         var Swagger = {};
         Swagger.load = function (config) {
-            //window.Scope = $rootScope;
+            window.Scope = $rootScope;
             $http.defaults.headers.common['X-DreamFactory-Application-Name'] = appname;
             if (!config) {
                 $http.get(basepath + "/api_docs", {
@@ -18,10 +18,10 @@ angular.module('ngSwagger', [])
                 config.forEach(function (endpoint) {
                     $http.get(basepath + "/api_docs" + "/" + endpoint)
                         .then(
-                            function (response) {
-                                Swagger.build(response);
-                            }
-                        );
+                        function (response) {
+                            Swagger.build(response);
+                        }
+                    );
                 });
 
             }
@@ -41,7 +41,7 @@ angular.module('ngSwagger', [])
             })
         };
         Swagger.build = function (response) {
-            $rootScope.df = {};
+            $rootScope.df = $rootScope.df ||  {};
             response.data.apis.forEach(function (api) {
                 var end = api.path.indexOf("/", 1);
                 end = end != -1 ? end : api.path.length;
